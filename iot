@@ -1,0 +1,41 @@
+import RPi.GPIO as GPIO
+import time
+
+# Define GPIO pin numbers for the traffic lights
+red_pin = 17
+yellow_pin = 27
+green_pin = 22
+
+# Set up GPIO mode
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(red_pin, GPIO.OUT)
+GPIO.setup(yellow_pin, GPIO.OUT)
+GPIO.setup(green_pin, GPIO.OUT)
+
+def set_traffic_lights(red, yellow, green):
+    GPIO.output(red_pin, red)
+    GPIO.output(yellow_pin, yellow)
+    GPIO.output(green_pin, green)
+
+def traffic_signal_cycle():
+    while True:
+        # Green signal (North-South)
+        set_traffic_lights(False, False, True)
+        time.sleep(30)  # Green light for 30 seconds
+
+        # Yellow signal (North-South)
+        set_traffic_lights(False, True, False)
+        time.sleep(5)  # Yellow light for 5 seconds
+
+        # Red signal (North-South)
+        set_traffic_lights(True, False, False)
+        time.sleep(10)  # Red light for 10 seconds
+
+        # Repeat the cycle for East-West traffic
+
+if __name__ == "__main__":
+    try:
+        traffic_signal_cycle()
+    except KeyboardInterrupt:
+        GPIO.cleanup()  # Clean up GPIO pins on keyboard interrupt
+
